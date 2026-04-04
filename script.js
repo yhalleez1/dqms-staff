@@ -317,11 +317,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             let countdown = 10;
             callNextBtn.innerText = `✓ Called! (${countdown}s)`;
 
-            // Show Skip button immediately during countdown
-            skipBtn.innerText     = 'Skip Ticket';
-            skipBtn.style.display = 'block';
-            skipBtn.disabled      = false;
-            skipBtn.style.opacity = '1';
+            // Show Skip or Mark End based on waiting queue
+            if (waiting.length > 0) {
+                skipBtn.innerText     = 'Skip Ticket';
+                skipBtn.style.display = 'block';
+                skipBtn.disabled      = false;
+                skipBtn.style.opacity = '1';
+                markEndBtn.style.display = 'none';
+            } else {
+                skipBtn.style.display    = 'none';
+                markEndBtn.style.display = 'block';
+                markEndBtn.disabled      = false;
+                markEndBtn.style.opacity = '1';
+            }
 
             countdownInterval = setInterval(() => {
                 countdown--;
@@ -339,10 +347,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     startServiceTracking();
 
-                    // Re-enable Call Next, Skip button already visible
+                    // Re-enable Call Next, hide Mark End
                     callNextBtn.innerText     = 'Call Next';
                     callNextBtn.disabled      = false;
                     callNextBtn.style.opacity = '1';
+                    markEndBtn.style.display  = 'none';
                 }
             }, 1000);
 
@@ -355,8 +364,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // ── Skip ──────────────────────────────────────────────────────────────────
-    const skipBtn = document.getElementById('skipBtn');
+    const skipBtn    = document.getElementById('skipBtn');
+    const markEndBtn = document.getElementById('markEndBtn');
+
+    // ── Mark End button ───────────────────────────────────────────────────────
+    if (markEndBtn) {
+        markEndBtn.addEventListener('click', async () => {
+            if (!currentServingNumber) return;
+            markEndBtn.disabled      = true;
+            markEndBtn.style.opacity = '0.6';
+            await finalisePreviousTicket(currentServingNumber);
+            currentServingNumber             = null;
+            currentServingSpan.innerText     = 'NONE';
+            markEndBtn.style.display         = 'none';
+            markEndBtn.disabled              = false;
+            markEndBtn.style.opacity         = '1';
+            showToast('Service ended', 'success');
+        });
+    }
     if (skipBtn) {
         skipBtn.addEventListener('click', async () => {
             if (skipBtn.disabled) return;
