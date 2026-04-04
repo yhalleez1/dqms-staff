@@ -309,7 +309,7 @@
                     // Store admin session
                     sessionStorage.setItem('isAdmin', 'true');
                     sessionStorage.setItem('adminName', 'System Administrator');
-                    window.location.href = '/admin.html';
+                    window.location.href = '/staff/admin.html';
                 } else {
                     errorMsg.innerText = 'Invalid admin credentials.';
                     errorMsg.classList.add('show');
@@ -329,7 +329,7 @@
                     sessionStorage.setItem('staffName', data.name);
                     sessionStorage.setItem('officeId', data.officeId);
                     sessionStorage.setItem('officeName', data.officeName);
-                    window.location.href = '/staff.html';
+                    window.location.href = '/staff/staff.html';
                 } else {
                     errorMsg.innerText = 'Invalid username or password.';
                     errorMsg.classList.add('show');
