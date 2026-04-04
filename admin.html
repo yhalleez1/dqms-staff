@@ -605,13 +605,40 @@
         @media (max-width: 900px) {
             .report-summary { grid-template-columns: 1fr 1fr; }
             .peak-grid { grid-template-columns: 1fr; }
-        }
-        @media (max-width: 900px) {
             .sidebar { width: 60px; }
             .sidebar-brand, .nav-item span, .sidebar-footer { display: none; }
             .main { margin-left: 60px; }
             .stats-row { grid-template-columns: 1fr 1fr; }
             .analytics-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 600px) {
+            .sidebar { 
+                width: 100%; height: auto; position: fixed; 
+                bottom: 0; top: auto; flex-direction: row;
+                padding: 0; z-index: 1000;
+            }
+            .sidebar-brand, .sidebar-footer { display: none; }
+            nav { display: flex; flex-direction: row; width: 100%; overflow-x: auto; }
+            .nav-item { 
+                flex: 1; flex-direction: column; padding: 8px 4px;
+                font-size: 0.65em; min-width: 50px;
+            }
+            .nav-item span:not(.nav-icon) { display: block; font-size: 0.85em; }
+            .nav-icon { font-size: 1.4em; }
+            .main { 
+                margin-left: 0 !important; 
+                padding: 12px; 
+                padding-bottom: 80px;
+            }
+            .stats-row { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .analytics-grid { grid-template-columns: 1fr; }
+            .report-summary { grid-template-columns: 1fr; }
+            .card { padding: 14px; }
+            table { font-size: 0.8em; }
+            th, td { padding: 8px 6px; }
+            .action-btn { padding: 5px 8px; font-size: 0.75em; }
+            input, select { font-size: 16px; } /* prevent zoom on iOS */
         }
     </style>
 </head>
