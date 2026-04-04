@@ -217,22 +217,21 @@ document.addEventListener('DOMContentLoaded', async () => {
             const currentData = await currentRes.json();
             const waiting     = await waitingRes.json();
 
-            if (waiting.length === 0) {
+            if (currentData.currentServing) {
+                currentServingNumber = currentData.currentServing;
+                currentServingSpan.innerText = formatTicketNumber(currentData.currentServing);
+                if (!countdownInterval) {
+                    callNextBtn.disabled      = waiting.length === 0;
+                    callNextBtn.style.opacity = waiting.length === 0 ? '0.4' : '1';
+                }
+            } else if (waiting.length === 0) {
                 currentServingNumber = null;
                 currentServingSpan.innerText = 'NONE';
-                // Queue empty: disable Call Next and stop any live elapsed ticking
                 if (!countdownInterval) {
                     callNextBtn.disabled      = true;
                     callNextBtn.style.opacity = '0.4';
                     stopMasterTick();
                     serviceStartTime = null;
-                }
-            } else if (currentData.currentServing) {
-                currentServingNumber = currentData.currentServing;
-                currentServingSpan.innerText = formatTicketNumber(currentData.currentServing);
-                if (!countdownInterval) {
-                    callNextBtn.disabled      = false;
-                    callNextBtn.style.opacity = '1';
                 }
             } else {
                 currentServingNumber = null;
