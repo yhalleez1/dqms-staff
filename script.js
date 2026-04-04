@@ -25,14 +25,14 @@ function announceTicket(ticketNumber) {
 // Logout function
 function doLogout() {
     sessionStorage.clear();
-    window.location.href = '/staff/index.html';
+    window.location.href = 'index.html';
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Ensure staff is authenticated and has officeId
     if (!staffId || !officeId) {
         alert('Invalid session. Please log in again.');
-        window.location.href = '/staff/index.html';
+        window.location.href = 'index.html';
         return;
     }
 
