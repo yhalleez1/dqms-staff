@@ -38,6 +38,33 @@
         }
 
         /* Sidebar */
+        .menu-toggle {
+            display: none;
+            position: absolute;
+            top: 12px; right: -40px;
+            width: 34px; height: 34px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 1.1em;
+            cursor: pointer;
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .sidebar.collapsed ~ .main {
+            margin-left: 0;
+            max-width: 100vw;
+        }
+
         .sidebar {
             width: 230px;
             min-height: 100vh;
@@ -603,11 +630,12 @@
         }
 
         @media (max-width: 900px) {
+            .menu-toggle { display: flex; }
             .report-summary { grid-template-columns: 1fr 1fr; }
             .peak-grid { grid-template-columns: 1fr; }
-            .sidebar { width: 60px; }
-            .sidebar-brand, .nav-item span, .sidebar-footer { display: none; }
-            .main { margin-left: 60px; }
+            .sidebar:not(.collapsed) { width: 230px; }
+            .sidebar.collapsed { width: 0; }
+            .main { margin-left: 0; max-width: 100vw; padding-left: 50px; }
             .stats-row { grid-template-columns: 1fr 1fr; }
             .analytics-grid { grid-template-columns: 1fr; }
         }
@@ -645,7 +673,8 @@
 <body>
 
 <!-- Sidebar -->
-<aside class="sidebar">
+<aside class="sidebar" id="sidebar">
+    <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">☰</button>
     <div class="sidebar-brand">
         <h2>QueueMS <span>ADMIN</span></h2>
         <p>Management Console</p>
@@ -1845,6 +1874,11 @@
         if (activePage === 'page-dashboard')  loadDashboard();
         if (activePage === 'page-students')   loadStudents();
     }, 30000);
+</script>
+<script>
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('collapsed');
+    }
 </script>
 </body>
 </html>
