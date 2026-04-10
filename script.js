@@ -94,6 +94,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // ── State ─────────────────────────────────────────────────────────────────
     let currentServingNumber  = null;
+    let waitingTickets        = [];     // module-scoped so callNext can check it
     let serviceStartTime      = null;   // Date: set after countdown ends (student being served)
     let countdownInterval     = null;   // 10s post-call countdown
     let masterTickInterval    = null;   // drives live Elapsed + Total Time every second
@@ -216,6 +217,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const currentData = await currentRes.json();
             const waiting     = await waitingRes.json();
+            waitingTickets    = waiting;
 
             if (currentData.currentServing) {
                 currentServingNumber = currentData.currentServing;
@@ -259,9 +261,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         } catch (error) {
             console.error('Error refreshing data:', error);
-            currentServingSpan.innerText = 'ERR';
+            currentServingSpan.innerText = '---';
             currentServingNumber = null;
-            waitingList.innerHTML = '<li style="color:#dc3545;">Error loading waiting list</li>';
+            waitingList.innerHTML = '<li style="color:#dc3545;">No internet connection</li>';
         }
     }
 
@@ -318,7 +320,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             callNextBtn.innerText = `✓ Called! (${countdown}s)`;
 
             // Show Skip or Mark End based on waiting queue
-            if (waiting.length > 0) {
+            if (waitingTickets.length > 0) {
                 skipBtn.innerText     = 'Skip Ticket';
                 skipBtn.style.display = 'block';
                 skipBtn.disabled      = false;
@@ -357,7 +359,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         } catch (error) {
             console.error('Error calling next ticket:', error);
-            showToast('Failed to call next ticket', 'error');
+            showToast('No internet connection', 'error');
             callNextBtn.innerText     = 'Call Next';
             callNextBtn.disabled      = false;
             callNextBtn.style.opacity = '1';
@@ -432,7 +434,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 await refresh();
             } catch (error) {
                 console.error('Error skipping ticket:', error);
-                showToast('Failed to skip ticket', 'error');
+                showToast('No internet connection', 'error');
                 skipBtn.disabled          = false;
                 skipBtn.style.opacity     = '1';
                 callNextBtn.disabled      = false;
