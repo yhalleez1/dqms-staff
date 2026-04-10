@@ -349,11 +349,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     startServiceTracking();
 
-                    // Re-enable Call Next, hide Mark End
+                    // Re-enable Call Next
                     callNextBtn.innerText     = 'Call Next';
                     callNextBtn.disabled      = false;
                     callNextBtn.style.opacity = '1';
-                    markEndBtn.style.display  = 'none';
+
+                    // Keep Mark End visible if no waiting tickets
+                    if (waitingTickets.length === 0) {
+                        markEndBtn.style.display = 'block';
+                        markEndBtn.disabled      = false;
+                        markEndBtn.style.opacity = '1';
+                    } else {
+                        markEndBtn.style.display = 'none';
+                    }
                 }
             }, 1000);
 
@@ -375,13 +383,31 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!currentServingNumber) return;
             markEndBtn.disabled      = true;
             markEndBtn.style.opacity = '0.6';
+
+            // Stop countdown if running
+            if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+
             await finalisePreviousTicket(currentServingNumber);
-            currentServingNumber             = null;
-            currentServingSpan.innerText     = 'NONE';
-            markEndBtn.style.display         = 'none';
-            markEndBtn.disabled              = false;
-            markEndBtn.style.opacity         = '1';
+            currentServingNumber         = null;
+            currentServingSpan.innerText = 'NONE';
+            markEndBtn.style.display     = 'none';
+            markEndBtn.disabled          = false;
+            markEndBtn.style.opacity     = '1';
+            skipBtn.style.display        = 'none';
+
+            // Reset call next button — queue is empty
+            callNextBtn.innerText     = 'Call Next';
+            callNextBtn.disabled      = true;
+            callNextBtn.style.opacity = '0.4';
+
+            // Reset tracking display
+            document.getElementById('startTime').innerText   = '---';
+            document.getElementById('endTime').innerText     = '---';
+            document.getElementById('timeElapsed').innerText = '00:00';
+            document.getElementById('timeElapsed').classList.remove('blinking');
+
             showToast('Service ended', 'success');
+            await refresh();
         });
     }
     if (skipBtn) {
