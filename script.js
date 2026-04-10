@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ── Update Total Time button display ──────────────────────────────────────
     function updateTotalTimeDisplay() {
         const grandTotal = completedSecondsTotal + liveElapsed();
-        document.getElementById('totalTimeBtn').innerText = `Total Time: ${formatMMSS(grandTotal)}`;
+        document.getElementById('totalTimeBtn').innerText = `Today Total Time: ${formatMMSS(grandTotal)}`;
     }
 
     // Initialise Total Time display immediately with DB value
