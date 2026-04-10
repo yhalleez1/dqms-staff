@@ -738,7 +738,7 @@
                 <span style="font-size:0.78em;color:var(--muted)"><span class="live-dot"></span>Auto-calculated</span>
             </div>
             <table class="week-table">
-                <thead><tr><th>Day</th><th>Tickets Served</th><th>Avg Wait Time</th><th>Total Serve Time</th></tr></thead>
+                <thead><tr><th>Day</th><th>Tickets Served</th><th>Avg Wait Time</th><th>Avg Serve Time</th></tr></thead>
                 <tbody id="weekly-dash-body"><tr class="empty-row"><td colspan="4">Loading...</td></tr></tbody>
             </table>
         </div>
@@ -824,7 +824,7 @@
                 <span style="font-size:0.78em;color:var(--muted)">Auto-generated from ticket records</span>
             </div>
             <table class="week-table">
-                <thead><tr><th>Date</th><th>Day</th><th>Tickets Served</th><th>Avg Wait</th><th>Total Serve Time</th></tr></thead>
+                <thead><tr><th>Date</th><th>Day</th><th>Tickets Served</th><th>Avg Wait</th><th>Avg Serve Time</th></tr></thead>
                 <tbody id="weekly-analytics-body"><tr class="empty-row"><td colspan="5">Loading...</td></tr></tbody>
             </table>
         </div>
@@ -1542,7 +1542,7 @@
                     <td>${d.dayName}</td>
                     <td>${d.ticketsServed}</td>
                     <td><strong style="color:var(--accent2)">${d.avgWaitMinutes != null ? d.avgWaitMinutes.toFixed(1) + ' min' : '—'}</strong></td>
-                    <td>${d.totalServeMinutes != null ? d.totalServeMinutes.toFixed(1) + ' min' : '—'}</td>
+                    <td>${d.avgServeMinutes != null ? d.avgServeMinutes.toFixed(1) + ' min' : '—'}</td>
                 </tr>
             `}).join('');
         } catch(e) {
@@ -1582,7 +1582,7 @@
                     <td>${d.dayName} <span style="color:var(--muted);font-size:0.85em">${d.date}</span></td>
                     <td>${d.ticketsServed}</td>
                     <td><strong style="color:var(--accent2)">${d.avgWaitMinutes != null ? d.avgWaitMinutes.toFixed(1) + ' min' : '—'}</strong></td>
-                    <td>${d.totalServeMinutes != null ? d.totalServeMinutes.toFixed(1) + ' min' : '—'}</td>
+                    <td>${d.avgServeMinutes != null ? d.avgServeMinutes.toFixed(1) + ' min' : '—'}</td>
                 </tr>
             `).join('');
         } catch(e) {
@@ -1657,8 +1657,8 @@
                     <div class="kpi-label">Busiest Day</div>
                 </div>
                 <div class="report-kpi">
-                    <div class="kpi-val">${totalServeMins > 0 ? totalServeMins.toFixed(0) : '—'}</div>
-                    <div class="kpi-label">Total Serve Time (min)</div>
+                    <div class="kpi-val">${totalServeMins > 0 ? (totalServeMins / Math.max(1, days.filter(d=>d.ticketsServed>0).length)).toFixed(1) : '—'}</div>
+                    <div class="kpi-label">Avg Serve Time (min)</div>
                 </div>
             </div>
 
@@ -1666,7 +1666,7 @@
                 <div class="card">
                     <div class="card-head"><h3>Daily Breakdown</h3></div>
                     <table>
-                        <thead><tr><th>Day</th><th>Date</th><th>Students</th><th>Avg Wait</th><th>Total Serve</th></tr></thead>
+                        <thead><tr><th>Day</th><th>Date</th><th>Students</th><th>Avg Wait</th><th>Avg Serve</th></tr></thead>
                         <tbody>
                             ${days.map(d => `
                                 <tr>
@@ -1674,7 +1674,7 @@
                                     <td style="color:var(--muted)">${d.date}</td>
                                     <td>${d.ticketsServed}</td>
                                     <td style="color:var(--accent2)">${d.avgWaitMinutes != null ? d.avgWaitMinutes.toFixed(1)+' min' : '—'}</td>
-                                    <td>${d.totalServeMinutes != null ? d.totalServeMinutes.toFixed(1)+' min' : '—'}</td>
+                                    <td>${d.avgServeMinutes != null ? d.avgServeMinutes.toFixed(1)+' min' : '—'}</td>
                                 </tr>
                             `).join('')}
                         </tbody>
@@ -1829,7 +1829,7 @@
                     day.date,
                     day.ticketsServed.toString(),
                     day.avgWaitMinutes != null ? day.avgWaitMinutes.toFixed(1) + ' m' : '—',
-                    day.totalServeMinutes != null ? day.totalServeMinutes.toFixed(1) + ' m' : '—'
+                    day.avgServeMinutes != null ? day.avgServeMinutes.toFixed(1) + ' m' : '—'
                 ];
 
                 rowData.forEach((text, colIdx) => {
