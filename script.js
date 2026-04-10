@@ -122,6 +122,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         return `${String(Math.floor(s / 60)).padStart(2,'0')}:${String(s % 60).padStart(2,'0')}`;
     }
 
+    function formatDuration(s) {
+        s = Math.max(0, Math.floor(s));
+        const h = Math.floor(s / 3600);
+        const m = Math.floor((s % 3600) / 60);
+        const sec = s % 60;
+        if (h > 0) return `${h}h ${m}m`;
+        if (m > 0) return `${m}m ${sec}s`;
+        return `${sec}s`;
+    }
+
     function liveElapsed() {
         if (!serviceStartTime) return 0;
         return Math.floor((Date.now() - serviceStartTime.getTime()) / 1000);
@@ -130,7 +140,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ── Update Total Time button display ──────────────────────────────────────
     function updateTotalTimeDisplay() {
         const grandTotal = completedSecondsTotal + liveElapsed();
-        document.getElementById('totalTimeBtn').innerText = `Today Total Time: ${formatMMSS(grandTotal)}`;
+        document.getElementById('totalTimeBtn').innerText = `Today Total Time: ${formatDuration(grandTotal)}`;
     }
 
     // Initialise Total Time display immediately with DB value
